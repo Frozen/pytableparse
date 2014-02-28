@@ -4,6 +4,8 @@ from pyquery import PyQuery
 
 __all__ = ['PyTable']
 
+version = '0.1.1'
+
 
 class PyTable():
 

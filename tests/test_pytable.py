@@ -92,7 +92,7 @@ class TestPyTable3(TestCase):
     def setUp(self):
 
         content = read_file('3.html')
-        table = pyquery.PyQuery(content)('.t-row')
+        table = pyquery.PyQuery(content)
         self.rs = pytableparse.PyTable(table)
 
     def test_year(self):
