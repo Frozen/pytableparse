@@ -4,7 +4,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(name='pytableparse',
-      version='0.1',
+      version='0.1.0',
       description='Search table values by keys',
       author='Potapov Konstantin',
       author_email='phpconf@gmail.com',
