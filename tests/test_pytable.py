@@ -1,9 +1,10 @@
 #! -*- coding: utf-8 -*-
+import sys
 from os.path import dirname, join
+sys.path.append(dirname(__file__))
 from unittest import TestCase
 import pyquery
 import pytableparse
-import sys
 
 DATA_DIR = join(dirname(__file__), 'data')
 
@@ -30,8 +31,8 @@ class TestPyTable(TestCase):
 
     def test_simply(self):
 
-        self.assertEqual(self.rs.row('key1'), 'value1')
-        self.assertEqual(self.rs.row('key2'), 'ya.ru')
+        self.assertEqual(self.rs('key1'), 'value1')
+        self.assertEqual(self.rs('key2'), 'ya.ru')
         self.assertEqual(self.rs('key2'), 'ya.ru')
 
     def test_tags(self):
@@ -45,27 +46,27 @@ class TestPyTable(TestCase):
 
         keys = ['http://ya.ru', 'http://ya2.ru']
         values = [u'Значение1', u'Значение2']
-        self.assertEqual(2, len(self.rs.row(u'Ключ', 'a')))
-        for k, v in enumerate(self.rs.row(u'Ключ', 'a')):
+        self.assertEqual(2, len(self.rs(u'Ключ', 'a')))
+        for k, v in enumerate(self.rs(u'Ключ', 'a')):
             self.assertEqual(v.get('href'), keys[k])
             self.assertEqual(v.text, values[k])
 
     def test_tags3(self):
 
-        for k, v in enumerate(self.rs.row(u'Ключ', 'a')):
+        for k, v in enumerate(self.rs(u'Ключ', 'a')):
             self.assertEqual(v.get('href'), self.keys[k])
             self.assertEqual(v.text, self.values[k])
 
     def test_not_exists(self):
-        self.assertEqual(self.rs.row(u'dasfasfas'), '')
-        self.assertEqual(self.rs.row(u'Ключ', 'span').text(), [])
-        self.assertEqual(self.rs.row(u'sadfsaf', 'span').text(), [])
-        self.assertEqual(self.rs.row(u'sadfsaf', 'span').asdict(), {})
+        self.assertEqual(self.rs(u'dasfasfas'), '')
+        self.assertEqual(self.rs(u'Ключ', 'span').text(), [])
+        self.assertEqual(self.rs(u'sadfsaf', 'span').text(), [])
+        self.assertEqual(self.rs(u'sadfsaf', 'span').asdict(), {})
 
     def test_tags5(self):
 
         d = dict(zip(self.keys, self.values))
-        self.assertEqual(self.rs.row(u'Ключ', 'a').asdict(), d)
+        self.assertEqual(self.rs(u'Ключ', 'a').asdict(), d)
 
 
 class TestPyTable2(TestCase):
@@ -85,6 +86,17 @@ class TestPyTable2(TestCase):
 
         self.rs(u'в главных ролях', 'a').text()
 
+
+class TestPyTable3(TestCase):
+
+    def setUp(self):
+
+        content = read_file('3.html')
+        table = pyquery.PyQuery(content)('.t-row')
+        self.rs = pytableparse.PyTable(table)
+
+    def test_year(self):
+        self.assertEqual(self.rs(u'год'), '1999')
 
 
 

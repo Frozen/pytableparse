@@ -1,5 +1,6 @@
 #! -*- coding: utf-8 -*-
 import six
+from pyquery import PyQuery
 
 __all__ = ['PyTable']
 
@@ -11,8 +12,8 @@ class PyTable():
         self.key_el = key_el
         self.value_pos = value_pos
 
-    def row(self, text, tag=None):
-        rs = self.table(u"{0}:contains('{1}')".format(self.key_el, text.replace("'", "\'")))
+    def __row(self, text, tag=None):
+        rs = self.table(u"{0}".format(self.key_el)).filter(lambda x: PyQuery(this).text() == text)
 
         val = []
         if self.value_pos == '+':
@@ -34,7 +35,7 @@ class PyTable():
         raise ValueError
 
     def __call__(self, *args, **kwargs):
-        return self.row(*args, **kwargs)
+        return self.__row(*args, **kwargs)
 
 
 class Tag():
@@ -78,4 +79,7 @@ class EmptyTag():
 
     def asdict(self):
         return {}
+
+    def __len__(self):
+        return 0
 
